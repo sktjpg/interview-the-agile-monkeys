@@ -11,6 +11,8 @@
     <modules>
         <module>boot</module>
         <module>http</module>
+        <module>application</module>
+        <module>postgres-repository</module>
     </modules>
 
     <properties>
@@ -58,14 +60,6 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.22.2</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <configuration>
-                    <mainClass>MainKt</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>
