@@ -1,0 +1,361 @@
+openapi: 3.0.0
+info:
+  title: Customer Management API
+  description: API for managing customers and users with role-based access control.
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Main API server (version 1)
+
+tags:
+  - name: Customers
+    description: Operations related to customers
+  - name: Users
+    description: Operations related to user management
+
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/oauth/authorize
+          tokenUrl: https://auth.example.com/oauth/token
+          scopes:
+            read_customers: Read customer data
+            write_customers: Write customer data (create/update/delete)
+            read_users: Read user data (admin only)
+            write_users: Write user data (admin only)
+            admin: Full admin rights
+
+  schemas:
+    CustomerRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Customer's first name
+          example: John
+        surname:
+          type: string
+          description: Customer's surname
+          example: Doe
+        photoUrl:
+          type: string
+          description: URL to the customer's photo
+      required:
+        - name
+        - surname
+        - photoUrl
+
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Customer unique identifier
+        name:
+          type: string
+        surname:
+          type: string
+        photoUrl:
+          type: string
+        createdBy:
+          type: string
+          description: The user who created the customer
+        modifiedBy:
+          type: string
+          description: The last user who modified the customer
+
+    UserRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        isAdmin:
+          type: boolean
+          default: false
+      required:
+        - username
+        - email
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        isAdmin:
+          type: boolean
+          default: false
+
+  responses:
+    UnauthorizedError:
+      description: Not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Unauthorized
+
+    ForbiddenError:
+      description: Access token does not have the required scope
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Forbidden
+
+paths:
+  /v1/customers:
+    get:
+      tags:
+        - Customers
+      summary: List all customers
+      operationId: listAllCustomers
+      security:
+        - OAuth2: [read_customers]
+      responses:
+        '200':
+          description: List of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    post:
+      tags:
+        - Customers
+      summary: Create a new customer
+      operationId: createCustomer
+      security:
+        - OAuth2: [write_customers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /v1/customers/{customerId}:
+    get:
+      tags:
+        - Customers
+      summary: Get customer details
+      operationId: getCustomerDetails
+      security:
+        - OAuth2: [read_customers]
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    put:
+      tags:
+        - Customers
+      summary: Update customer details
+      operationId: updateCustomer
+      security:
+        - OAuth2: [write_customers]
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerRequest'
+      responses:
+        '200':
+          description: Customer updated successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    delete:
+      tags:
+        - Customers
+      summary: Delete a customer
+      operationId: deleteCustomer
+      security:
+        - OAuth2: [write_customers]
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Customer deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /v1/users:
+    get:
+      tags:
+        - Users
+      summary: List all users (admin only)
+      operationId: listAllUsers
+      security:
+        - OAuth2: [read_users, admin]
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    post:
+      tags:
+        - Users
+      summary: Create a new user (admin only)
+      operationId: createUser
+      security:
+        - OAuth2: [write_users, admin]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+  /v1/users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: Get user details by ID (admin only)
+      operationId: getUserById
+      security:
+        - OAuth2: [read_users, admin]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    put:
+      tags:
+        - Users
+      summary: Update user details (admin only)
+      operationId: updateUser
+      security:
+        - OAuth2: [write_users, admin]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+
+    delete:
+      tags:
+        - Users
+      summary: Delete a user (admin only)
+      operationId: deleteUser
+      security:
+        - OAuth2: [write_users, admin]
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted successfully
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
