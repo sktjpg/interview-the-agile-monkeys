@@ -9,26 +9,23 @@ import org.springframework.web.bind.annotation.RestController
 @Component
 class UserController : UsersApi {
 
-    override fun _createUser(userRequest: @Valid UserRequest?): ResponseEntity<UserResponse?>? {
-        return super._createUser(userRequest)
+    override fun createUser(userRequest: @Valid UserRequest): ResponseEntity<UserResponse> {
+        return super.createUser(userRequest)
     }
 
-    override fun _getUserById(userId: String?): ResponseEntity<UserResponse?>? {
-        return super._getUserById(userId)
+    override fun getUserById(userId: String): ResponseEntity<UserResponse> {
+        return super.getUserById(userId)
     }
 
-    override fun _deleteUser(userId: String?): ResponseEntity<Void?>? {
-        return super._deleteUser(userId)
+    override fun deleteUser(userId: String): ResponseEntity<Void> {
+        return super.deleteUser(userId)
     }
 
-    override fun _listAllUsers(): ResponseEntity<List<UserResponse?>?>? {
-        return super._listAllUsers()
+    override fun listAllUsers(): ResponseEntity<List<UserResponse>> {
+        return super.listAllUsers()
     }
 
-    override fun _updateUser(
-        userId: String?,
-        userRequest: @Valid UserRequest?
-    ): ResponseEntity<Void?>? {
-        return super._updateUser(userId, userRequest)
+    override fun updateUser(userId: String, userRequest: UserRequest): ResponseEntity<Void> {
+        return super.updateUser(userId, userRequest)
     }
 }
