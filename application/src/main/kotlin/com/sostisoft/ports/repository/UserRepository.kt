@@ -1,4 +1,4 @@
-package com.sostisoft.ports
+package com.sostisoft.ports.repository
 
 import com.sostisoft.domain.User
 

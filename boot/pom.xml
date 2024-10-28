@@ -73,6 +73,16 @@
             <artifactId>http</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.sostisoft</groupId>
+            <artifactId>local-file</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sostisoft</groupId>
+            <artifactId>security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

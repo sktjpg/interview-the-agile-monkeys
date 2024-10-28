@@ -1,7 +1,7 @@
 package com.sostisoft.usecase
 
 import com.sostisoft.domain.User
-import com.sostisoft.ports.UserRepository
+import com.sostisoft.ports.repository.UserRepository
 import org.springframework.stereotype.Component
 
 @Component
