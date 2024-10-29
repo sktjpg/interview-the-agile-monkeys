@@ -14,23 +14,23 @@ import org.springframework.stereotype.Component
 class UserUseCase(
     private val passwordHashGenerator: PasswordHashGenerator,
     private val userRepository: UserRepository,
-    private val tokenManager: TokenManager,
+    private val tokenValidatorUserCase: TokenValidatorUserCase,
 ) {
 
     private val log = LoggerFactory.getLogger(UserUseCase::class.java)
 
     fun getUserById(id: Long, token: String?): User =
         id
-            .also { canAccessToResourceOrException(token) }
+            .also { tokenValidatorUserCase.validateToken(token, true) }
             .let(userRepository::findById)
             ?: throw NotFoundException("User not found")
 
     fun getAllUsers(token: String?): List<User> =
-        canAccessToResourceOrException(token)
+        tokenValidatorUserCase.validateToken(token, true)
             .let { userRepository.findAll() }
 
     fun createUser(user: User, token: String?): User {
-        canAccessToResourceOrException(token)
+        tokenValidatorUserCase.validateToken(token, true)
 
         val generatedPassWord = passwordHashGenerator.generateRandomPassword()
         val hashedPassword = passwordHashGenerator.hashPassword(generatedPassWord)
@@ -44,22 +44,12 @@ class UserUseCase(
 
     fun deleteUser(id: Long, token: String?) =
         id
-            .also { canAccessToResourceOrException(token) }
+            .also { tokenValidatorUserCase.validateToken(token, true) }
             .let(userRepository::deleteUser)
 
     fun updateUser(id: Long, user: User, token: String?) =
         id
-            .also { canAccessToResourceOrException(token) }
+            .also { tokenValidatorUserCase.validateToken(token, true) }
             .let { userRepository.updateUser(it, user) }
-
-    fun canAccessToResourceOrException(token: String?) {
-        if (token == null) {
-            throw UnauthorizedException("Authentication is required")
-        }
-
-        token
-            .takeIf(tokenManager::canAccessResource)
-            ?: throw ForbiddenException("You don't have permission to access this resource")
-    }
 
 }

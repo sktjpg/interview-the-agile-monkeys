@@ -1,5 +1,6 @@
 package com.sostisoft
 
+import com.sostisoft.domain.Permission
 import com.sostisoft.domain.User
 import com.sostisoft.ports.security.TokenManager
 import io.jsonwebtoken.Claims
@@ -16,12 +17,12 @@ class JwtTokenManager(
     @Value("\${jwt.expiration}") private val expiration: Long,
 ) : TokenManager {
 
-    override fun canAccessResource(token: String): Boolean {
+    override fun validateToken(token: String): Permission {
         try {
             val claims = parseToken(token)
-            return !claims.expiration.before(Date())
+            return Permission(!claims.expiration.before(Date()), claims["isAdmin"] as Boolean)
         } catch (e: Exception) {
-            return false
+            return Permission(false, false)
         }
     }
 

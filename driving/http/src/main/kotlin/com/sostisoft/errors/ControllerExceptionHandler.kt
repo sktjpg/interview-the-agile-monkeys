@@ -1,6 +1,9 @@
 package com.sostisoft.errors
 
+import com.sostisoft.domain.errors.ExpiredTokenException
+import com.sostisoft.domain.errors.ForbiddenException
 import com.sostisoft.domain.errors.NotFoundException
+import com.sostisoft.domain.errors.UnauthorizedException
 import com.sostisoft.domain.errors.UserLoginException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -36,6 +39,45 @@ class ControllerExceptionHandler {
             path = request.getDescription(false)
         )
         return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
+    }
+
+    @ExceptionHandler(ExpiredTokenException::class)
+    fun handleResponseStatusException(
+        ex: ExpiredTokenException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message!!,
+            status = HttpStatus.UNAUTHORIZED.value(),
+            path = request.getDescription(false)
+        )
+        return ResponseEntity(errorResponse, HttpStatus.UNAUTHORIZED)
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleResponseStatusException(
+        ex: UnauthorizedException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message!!,
+            status = HttpStatus.UNAUTHORIZED.value(),
+            path = request.getDescription(false)
+        )
+        return ResponseEntity(errorResponse, HttpStatus.UNAUTHORIZED)
+    }
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleResponseStatusException(
+        ex: ForbiddenException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message!!,
+            status = HttpStatus.FORBIDDEN.value(),
+            path = request.getDescription(false)
+        )
+        return ResponseEntity(errorResponse, HttpStatus.FORBIDDEN)
     }
 
     @ExceptionHandler(NotFoundException::class)
