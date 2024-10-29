@@ -5,8 +5,6 @@ import com.sostisoft.ports.security.TokenManager
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import io.jsonwebtoken.security.SecureDigestAlgorithm
-import io.jsonwebtoken.security.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
