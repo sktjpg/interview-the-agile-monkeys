@@ -17,5 +17,7 @@ interface UserJpaRepository : JpaRepository<UserEntity, Long> {
         @Param("username") username: String,
         @Param("email") email: String,
         @Param("isAdmin") isAdmin: Boolean
-    ): User
+    ): User?
+
+    fun findByUsernameAndPassword(username: String, password: String): UserEntity?
 }

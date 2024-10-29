@@ -17,3 +17,6 @@ spring:
     enabled: true
     locations: classpath:migration/versions
     baseline-on-migrate: true
+
+jwt.secret: "prueba"
+jwt.expiration: 86400000

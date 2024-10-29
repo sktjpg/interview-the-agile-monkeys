@@ -12,6 +12,8 @@ interface UserRepository {
 
     fun deleteUser(id: Long)
 
-    fun updateUser(id: Long, user: User): User
+    fun updateUser(id: Long, user: User): User?
+
+    fun findByUserWithPassword(username: String, password: String): User?
 
 }
