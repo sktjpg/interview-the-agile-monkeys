@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/postgres
+    username: adm-interview-the-agile-monkeys-main
+    password: adm-interview-the-agile-monkeys-main
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:migration/versions
+    schemas: postgres
