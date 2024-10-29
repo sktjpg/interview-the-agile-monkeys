@@ -1,4 +1,4 @@
-package com.sostisoft.mappers
+package com.sostisoft.api.user
 
 import com.sostisoft.api.UserRequest
 import com.sostisoft.api.UserResponse

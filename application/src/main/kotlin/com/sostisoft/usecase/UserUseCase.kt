@@ -3,28 +3,39 @@ package com.sostisoft.usecase
 import com.sostisoft.domain.User
 import com.sostisoft.domain.errors.NotFoundException
 import com.sostisoft.ports.repository.UserRepository
+import com.sostisoft.ports.security.PasswordHashGenerator
 import org.springframework.stereotype.Component
 
 @Component
-class UserUseCase(private val userRepository: UserRepository) {
+class UserUseCase(
+    private val passwordHashGenerator: PasswordHashGenerator,
+    private val userRepository: UserRepository
+) {
 
-    fun getUserById(id: Long): User =
+    fun getUserById(id: Long, token: String?): User =
         id
             .let(userRepository::findById)
             ?: throw NotFoundException("User not found")
 
-    fun getAllUsers(): List<User> =
+    fun getAllUsers(token: String?): List<User> =
         userRepository.findAll()
 
-    fun createUser(user: User): User =
-        user
-            .let(userRepository::createUser)
+    fun createUser(user: User, token: String?): User {
+        val generatedPassWord = passwordHashGenerator.generateRandomPassword()
+        val hashedPassword = passwordHashGenerator.hashPassword(generatedPassWord)
 
-    fun deleteUser(id: Long) =
+        // Send email to the new user with the generated password
+
+        return user
+            .copy(password = hashedPassword)
+            .let(userRepository::createUser)
+    }
+
+    fun deleteUser(id: Long, token: String?) =
         id
             .let(userRepository::deleteUser)
 
-    fun updateUser(id: Long, user: User) =
+    fun updateUser(id: Long, user: User, token: String?) =
         id
             .let { userRepository.updateUser(it, user) }
 
