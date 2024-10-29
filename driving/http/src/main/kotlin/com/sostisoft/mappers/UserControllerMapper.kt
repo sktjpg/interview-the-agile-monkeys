@@ -1,14 +1,21 @@
 package com.sostisoft.mappers
 
+import com.sostisoft.api.UserRequest
 import com.sostisoft.api.UserResponse
 import com.sostisoft.domain.User
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 
 @Component
 class UserControllerMapper {
 
-    fun toResponseEntity(user: User): ResponseEntity<UserResponse> =
+    fun toDomain(userRequest: UserRequest): User =
+        User(
+            userName = userRequest.username,
+            email = userRequest.email,
+            isAdmin = userRequest.isAdmin,
+        )
+
+    fun toResponseEntity(user: User): UserResponse =
         UserResponse()
             .apply {
                 id = user.id.toString()
@@ -16,6 +23,9 @@ class UserControllerMapper {
                 email = user.email
                 isAdmin = user.isAdmin
             }
-            .let { ResponseEntity.ok(it) }
+
+    fun toResponseEntity(user: List<User>): List<UserResponse> =
+        user
+            .map { toResponseEntity(it) }
 
 }

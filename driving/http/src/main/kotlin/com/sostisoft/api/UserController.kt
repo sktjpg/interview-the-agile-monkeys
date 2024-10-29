@@ -14,25 +14,36 @@ class UserController(
     private val userControllerMapper: UserControllerMapper
 ) : UsersApi {
 
-    override fun createUser(userRequest: @Valid UserRequest): ResponseEntity<UserResponse> {
-        return super.createUser(userRequest)
-    }
+    override fun createUser(userRequest: @Valid UserRequest): ResponseEntity<UserResponse> =
+        userRequest
+            .let(userControllerMapper::toDomain)
+            .let(userUseCase::createUser)
+            .let(userControllerMapper::toResponseEntity)
+            .let { ResponseEntity.status(201).body(it) }
 
     override fun getUserById(userId: String): ResponseEntity<UserResponse> =
         userId
             .toLong()
             .let(userUseCase::getUserById)
             .let(userControllerMapper::toResponseEntity)
+            .let { ResponseEntity.ok(it) }
 
-    override fun deleteUser(userId: String): ResponseEntity<Void> {
-        return super.deleteUser(userId)
-    }
+    override fun deleteUser(userId: String): ResponseEntity<Void> =
+        userId
+            .toLong()
+            .let(userUseCase::deleteUser)
+            .let { ResponseEntity.noContent().build() }
 
-    override fun listAllUsers(): ResponseEntity<List<UserResponse>> {
-        return super.listAllUsers()
-    }
+    override fun listAllUsers(): ResponseEntity<List<UserResponse>> =
+        userUseCase
+            .getAllUsers()
+            .let(userControllerMapper::toResponseEntity)
+            .let { ResponseEntity.ok(it) }
 
-    override fun updateUser(userId: String, userRequest: UserRequest): ResponseEntity<Void> {
-        return super.updateUser(userId, userRequest)
-    }
+    override fun updateUser(userId: String, userRequest: UserRequest): ResponseEntity<Void> =
+        userRequest
+            .let(userControllerMapper::toDomain)
+            .let { userUseCase.updateUser(userId.toLong(), it) }
+            .let { ResponseEntity.noContent().build() }
+
 }

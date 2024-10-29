@@ -16,4 +16,29 @@ class UserSqlRepository(
             .let(userJpaRepository::findById)
             .getOrNull()
             ?.let(userSqlRepositoryMapper::toDomain)
+
+    override fun findAll(): List<User> =
+        userJpaRepository
+            .findAll()
+            .map(userSqlRepositoryMapper::toDomain)
+
+    override fun createUser(user: User): User =
+        user
+            .let(userSqlRepositoryMapper::toEntity)
+            .let(userJpaRepository::save)
+            .let(userSqlRepositoryMapper::toDomain)
+
+
+    override fun deleteUser(id: Long) =
+        id
+            .let(userJpaRepository::deleteById)
+
+    override fun updateUser(id: Long, user: User) =
+        userJpaRepository
+            .updateUserById(
+                id = id,
+                username = user.userName,
+                email = user.email,
+                isAdmin = user.isAdmin,
+            )
 }

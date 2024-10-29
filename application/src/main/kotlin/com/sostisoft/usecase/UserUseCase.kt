@@ -13,4 +13,19 @@ class UserUseCase(private val userRepository: UserRepository) {
             .let(userRepository::findById)
             ?: throw NotFoundException("User not found")
 
+    fun getAllUsers(): List<User> =
+        userRepository.findAll()
+
+    fun createUser(user: User): User =
+        user
+            .let(userRepository::createUser)
+
+    fun deleteUser(id: Long) =
+        id
+            .let(userRepository::deleteUser)
+
+    fun updateUser(id: Long, user: User) =
+        id
+            .let { userRepository.updateUser(it, user) }
+
 }

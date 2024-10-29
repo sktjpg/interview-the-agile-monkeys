@@ -11,7 +11,7 @@ class UserSqlRepositoryMapper {
             id = user.id,
             username = user.userName,
             email = user.email,
-            password = user.password,
+            password = "user.password",
             isAdmin = user.isAdmin
         )
     }
