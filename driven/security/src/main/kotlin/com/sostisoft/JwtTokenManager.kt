@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.stereotype.Component
 import java.util.Date
 
@@ -15,7 +16,7 @@ class JwtTokenManager(
     @Value("\${jwt.expiration}") private val expiration: Long,
 ) : TokenManager {
 
-    override fun canAccessResource(token: String, isAdmin: Boolean): Boolean {
+    override fun canAccessResource(token: String): Boolean {
         try {
             val claims = parseToken(token)
             return !claims.expiration.before(Date())
