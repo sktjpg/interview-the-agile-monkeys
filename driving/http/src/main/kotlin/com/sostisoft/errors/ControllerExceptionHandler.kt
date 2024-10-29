@@ -1,6 +1,7 @@
 package com.sostisoft.errors
 
 import com.sostisoft.domain.errors.NotFoundException
+import com.sostisoft.domain.errors.UserLoginException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -22,6 +23,19 @@ class ControllerExceptionHandler {
             path = request.getDescription(false)
         )
         return ResponseEntity(errorResponse, ex.statusCode)
+    }
+
+    @ExceptionHandler(UserLoginException::class)
+    fun handleResponseStatusException(
+        ex: UserLoginException,
+        request: WebRequest
+    ): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            message = ex.message!!,
+            status = HttpStatus.BAD_REQUEST.value(),
+            path = request.getDescription(false)
+        )
+        return ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST)
     }
 
     @ExceptionHandler(NotFoundException::class)
