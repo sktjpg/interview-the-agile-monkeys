@@ -20,6 +20,7 @@ class UserController(
 
     override fun getUserById(userId: String): ResponseEntity<UserResponse> =
         userId
+            .toLong()
             .let(userUseCase::getUserById)
             .let(userControllerMapper::toResponseEntity)
 

@@ -16,4 +16,4 @@ spring:
   flyway:
     enabled: true
     locations: classpath:migration/versions
-    schemas: postgres
+    baseline-on-migrate: true

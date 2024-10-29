@@ -1,8 +1,9 @@
 package com.sostisoft.domain
 
 data class User(
-    val id: String,
+    val id: Long,
     val userName: String,
     val email: String,
-    val isAdmin: Boolean
+    val isAdmin: Boolean,
+    val password: String
 )

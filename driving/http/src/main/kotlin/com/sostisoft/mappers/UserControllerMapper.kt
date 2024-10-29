@@ -11,7 +11,7 @@ class UserControllerMapper {
     fun toResponseEntity(user: User): ResponseEntity<UserResponse> =
         UserResponse()
             .apply {
-                id = user.id
+                id = user.id.toString()
                 username = user.userName
                 email = user.email
                 isAdmin = user.isAdmin

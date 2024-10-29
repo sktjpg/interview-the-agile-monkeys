@@ -4,6 +4,6 @@ import com.sostisoft.domain.User
 
 interface UserRepository {
 
-    fun findById(id: String): User
+    fun findById(id: Long): User?
 
 }
