@@ -3,7 +3,7 @@ package com.sostisoft.adapters.user
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "\"users\"")
 data class UserEntity(
     @Id
     @Column(name = "user_id")
