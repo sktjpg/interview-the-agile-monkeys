@@ -1,0 +1,24 @@
+version: '3.7'
+
+networks:
+  interview-the-agile-monkeys-network:
+    name: interview-the-agile-monkeys-network
+
+services:
+  db_postgres_main:
+    image: postgres:14.4
+    environment:
+      POSTGRES_USER: adm-interview-the-agile-monkeys-main
+      POSTGRES_PASSWORD: adm-interview-the-agile-monkeys-main
+      POSTGRES_DB: interview-the-agile-monkeys-main
+    volumes:
+      - ./postgresql:/var/lib/postgresql
+      - ./postgresql-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - interview-the-agile-monkeys-network
+volumes:
+  postgresql:
+  postgresql-data:
+    driver: local
