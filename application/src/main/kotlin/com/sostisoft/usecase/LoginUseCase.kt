@@ -13,14 +13,11 @@ class LoginUseCase(
     private val tokenManager: TokenManager,
 ) {
 
-    fun login(username: String, password: String): String {
-        val user = userRepository.findByUserName(username)
-        val isCorrect = passwordHashGenerator.isPasswordMatch(password, user!!.password!!)
-        return if (isCorrect) tokenManager.generateToken(user) else throw UserLoginException("Incorrect login")
-    }
-       //username
-       //    .let(userRepository::findByUserName)
-       //    .takeIf { it != null && passwordHashGenerator.isPasswordMatch(password, it.password!!) }
-       //    ?.let(tokenManager::generateToken)
-       //    ?: throw UserLoginException("Incorrect login")
+    fun login(username: String, password: String): String =
+        username
+            .let(userRepository::findByUserName)
+            ?.takeIf { passwordHashGenerator.isPasswordMatch(password, it.password!!) }
+            ?.let(tokenManager::generateToken)
+            ?: throw UserLoginException("Incorrect login")
+
 }
