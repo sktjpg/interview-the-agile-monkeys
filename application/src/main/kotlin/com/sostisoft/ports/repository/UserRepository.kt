@@ -14,6 +14,6 @@ interface UserRepository {
 
     fun updateUser(id: Long, user: User): User?
 
-    fun findByUserWithPassword(username: String, password: String): User?
+    fun findByUserName(username: String): User?
 
 }

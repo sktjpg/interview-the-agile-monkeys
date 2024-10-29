@@ -42,9 +42,9 @@ class UserSqlRepository(
                 isAdmin = user.isAdmin,
             )
 
-    override fun findByUserWithPassword(username: String, password: String): User? {
+    override fun findByUserName(username: String): User? {
         return userJpaRepository
-            .findByUsernameAndPassword(username, password)
+            .findByUsername(username)
             ?.let(userSqlRepositoryMapper::toDomain)
     }
 }

@@ -5,6 +5,8 @@ import com.sostisoft.ports.security.TokenManager
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SecureDigestAlgorithm
+import io.jsonwebtoken.security.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
@@ -25,20 +27,20 @@ class JwtTokenManager(
     }
 
     private fun parseToken(token: String): Claims {
-        return Jwts.parserBuilder()
-            .setSigningKey(Keys.hmacShaKeyFor(secret.toByteArray()))
+        return Jwts.parser()
+            .verifyWith(Keys.hmacShaKeyFor(secret.toByteArray()))
             .build()
-            .parseClaimsJws(token)
-            .body
+            .parseSignedClaims(token)
+            .payload
     }
 
     override fun generateToken(user: User): String {
         return Jwts.builder()
-            .setSubject(user.userName)
+            .subject(user.userName)
             .claim("isAdmin", user.isAdmin)
-            .setIssuedAt(Date())
-            .setExpiration(Date(System.currentTimeMillis() + expiration))
-            .signWith(Keys.hmacShaKeyFor(secret.toByteArray()))
+            .issuedAt(Date())
+            .expiration(Date(System.currentTimeMillis() + expiration))
+            .signWith(Keys.hmacShaKeyFor(secret.toByteArray(Charsets.UTF_8)))
             .compact()
     }
 }
