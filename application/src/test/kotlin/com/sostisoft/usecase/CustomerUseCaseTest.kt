@@ -1,14 +1,12 @@
 package com.sostisoft.usecase
 
 import com.sostisoft.domain.Customer
-import com.sostisoft.domain.Permission
 import com.sostisoft.domain.errors.NotFoundException
 import com.sostisoft.ports.repository.CustomerRepository
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock

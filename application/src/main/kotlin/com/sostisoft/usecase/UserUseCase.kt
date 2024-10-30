@@ -1,12 +1,9 @@
 package com.sostisoft.usecase
 
 import com.sostisoft.domain.User
-import com.sostisoft.domain.errors.ForbiddenException
 import com.sostisoft.domain.errors.NotFoundException
-import com.sostisoft.domain.errors.UnauthorizedException
 import com.sostisoft.ports.repository.UserRepository
 import com.sostisoft.ports.security.PasswordHashGenerator
-import com.sostisoft.ports.security.TokenManager
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
