@@ -1,5 +1,6 @@
 package com.sostisoft.usecase
 
+import com.sostisoft.domain.Permission
 import com.sostisoft.domain.errors.ForbiddenException
 import com.sostisoft.domain.errors.UnauthorizedException
 import com.sostisoft.ports.security.TokenManager
@@ -10,20 +11,20 @@ class TokenValidatorUserCase(
     private val tokenManager: TokenManager
 ) {
 
-    fun validateToken(token: String?, mustBeAdmin: Boolean) {
-        if (token == null) {
-            throw UnauthorizedException(AUTHENTICATION_IS_REQUIRED)
-        }
+    fun validateToken(token: String?, mustBeAdmin: Boolean): Permission {
+        token ?: throw UnauthorizedException(AUTHENTICATION_IS_REQUIRED)
 
-        val user = tokenManager.validateToken(token)
+        val permission = tokenManager.validateToken(token) ?: throw UnauthorizedException(AUTHENTICATION_IS_REQUIRED)
 
-        if (!user.isValid) {
+        if (!permission.isValid) {
             throw ForbiddenException(FORBIDDEN_MESSAGE)
         }
 
-        if (mustBeAdmin && !user.isAdmin) {
+        if (mustBeAdmin && !permission.isAdmin) {
             throw ForbiddenException(FORBIDDEN_MESSAGE)
         }
+
+        return permission
     }
 
     companion object {

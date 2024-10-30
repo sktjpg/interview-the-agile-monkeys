@@ -65,13 +65,15 @@ components:
           type: string
           description: Customer's surname
           example: Doe
-        photoUrl:
+        photo:
           type: string
-          description: URL to the customer's photo
+          format: binary
+          description: Raw image file for the customer's photo
       required:
         - name
         - surname
-        - photoUrl
+        - photo
+
 
     CustomerResponse:
       type: object
